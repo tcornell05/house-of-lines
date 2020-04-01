@@ -72,6 +72,7 @@
       return {
         speed: 17,
         execs: 0,
+        executing: false,
         algoDuration: 0,
         algoComplexity: "",
         graphs : {
@@ -159,7 +160,12 @@
       }
     },
     methods: {
-      handleGraph: function(graphId) {
+      handleGraph: async function(graphId) {
+        if (this.executing) {
+          return false;
+        }
+        this.executing = true;
+
         // Reset output
         this.output = [];
         // Increase execution counter (used to cancel previous executions)
@@ -175,7 +181,8 @@
         this.algoDuration = et - bt;
         this.algoComplexity = "O(m+n)";
         // Start path drawing animation/output
-        this.drawPaths(graphId, paths);
+        await this.drawPaths(graphId, paths);
+        this.executing = false;
       },
       logPath: function(path){
         this.output.push(path.join('->'))
