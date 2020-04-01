@@ -13,10 +13,10 @@
     <!-- Buttons to generate paths -->
     <div class="row buttons">
       <div class="col-sm-6 text-center">
-        <div class="btn btn-primary" v-on:click="handleGraph( 1)">Generate Eulear Paths</div>
+        <div class="btn btn-primary" v-on:click="handleGraph( 1)">Generate Euler Paths</div>
       </div>
       <div class="col-sm-6 text-center">
-        <div class="btn btn-primary" v-on:click="handleGraph( 2)">Generate Eulear Paths</div>
+        <div class="btn btn-primary" v-on:click="handleGraph( 2)">Generate Euler Paths</div>
       </div>
     </div>
     <!-- Slider to increase/decrease speed of graph animation/output -->
