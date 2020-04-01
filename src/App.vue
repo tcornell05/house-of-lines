@@ -1,24 +1,28 @@
 <template>
+  <!-- Graph Component -->
   <div class="graphModule container">
+    <!-- Graph Containers -->
     <div class="graphCont row">
-      <div class="graph1Cont col-md-6">
+      <div class="graph1Cont col-sm-6">
         <Graph1></Graph1>
       </div>
-      <div class="graph2Cont col-md-6">
+      <div class="graph2Cont col-sm-6">
         <Graph2></Graph2>
       </div>
     </div>
+    <!-- Buttons to generate paths -->
     <div class="row buttons">
-      <div class="col-md-6 text-center">
+      <div class="col-sm-6 text-center">
         <div class="btn btn-primary" v-on:click="handleGraph( 1)">Generate Eulear Paths</div>
       </div>
-      <div class="col-md-6 text-center">
+      <div class="col-sm-6 text-center">
         <div class="btn btn-primary" v-on:click="handleGraph( 2)">Generate Eulear Paths</div>
       </div>
     </div>
+    <!-- Slider to increase/decrease speed of graph animation/output -->
     <div class="row top-buffer">
-      <div class="col-md-4 offset-4 slider-cont">
-        <span>SPEED:</span>
+      <div class="col-sm-4 offset-4 slider-cont">
+        <span class="h6">SPEED:</span>
         <vue-slider
                 v-model="speed"
                 :min="1"
@@ -27,12 +31,14 @@
         ></vue-slider>
       </div>
     </div>
+    <!-- Output Section for paths -->
     <div class="row top-buffer">
-      <div class="col-md-12">
+      <div class="col-sm-12">
       <div class="graphOutputCont window">
           <div class="graphOutput terminal">
             <div class="command">Paths: {{ pathCounter }}</div>
             <div class="command">Time: {{ algoDuration }} MS</div>
+            <div class="command">Complexity: {{ algoComplexity }}</div>
             <div class="log">
               <ul>
                 <li v-bind:key="o" v-for="o in output">{{ o }}</li>
@@ -67,6 +73,7 @@
         speed: 17,
         execs: 0,
         algoDuration: 0,
+        algoComplexity: "",
         graphs : {
           1: {
             A: ['B', 'C', 'D'],
@@ -147,43 +154,52 @@
 
           }
         },
-        output: ["Click a graph!"],
+        output: [],
         pathCounter: 0
       }
     },
     methods: {
       handleGraph: function(graphId) {
-        console.log(this.speed);
+        // Reset output
         this.output = [];
+        // Increase execution counter (used to cancel previous executions)
         this.execs++;
         this.pathCounter = 0;
 
-
-        //Count execution of algorithm
+        // Count execution of algorithm
         const bt = performance.now();
+        // Call the graph module to determine eulerian paths utilizing DFS
         const paths = GraphHelper.getEularianPaths(this.graphs[graphId]);
         const et = performance.now();
+
         this.algoDuration = et - bt;
+        this.algoComplexity = "O(m+n)";
+        // Start path drawing animation/output
         this.drawPaths(graphId, paths);
-        this.componentProcessing = false;
       },
       logPath: function(path){
         this.output.push(path.join('->'))
       },
+      //Utilize async function for await
       drawPaths: async function(graphId, paths){
 
+        //Current execution for comparison
         const currentExecs = this.execs;
-        for (let p of paths[1]){
+
+        //Only iterate through vertex1 eulerian paths since we don't want reflections
+        for (let p of paths[0]){
+
+          //Make sure this is the only execution of the animation/output that's supposed to be running
           if (this.execs !== currentExecs) {
             return false;
           }
           let lastNode = null;
           let edges = [];
           for(let v of p) {
+            //Make sure this is the only execution of the animation/output that's supposed to be running
             if (this.execs !== currentExecs) {
               return false;
             }
-            console.log(currentExecs, this.execs);
             //Highlight edge
             if (lastNode !== null) {
               const edgeId = lastNode + v;
@@ -191,6 +207,8 @@
               edges.push(edgeId);
             }
             lastNode = v;
+
+            //relatively increase/decrease speed of animation based on slider input
             await this.timeout((20 - this.speed) * 20);
           }
           this.logPath(p);
@@ -204,7 +222,6 @@
         return new Promise(resolve => setTimeout(resolve, ms));
       },
       highlightEdge: function(graphId, edgeId ){
-          console.log("EDGE HIGHLIGHT", edgeId);
           document.getElementById(this.svgPathData.edges[graphId][edgeId]).style.stroke="orange";
       },
       clearEdges: function(graphId, edges){
@@ -289,6 +306,7 @@
     white-space: nowrap;
     overflow: hidden;
     animation: write-log 5s both;
+    padding-top:20px;
   }
 
 </style>
