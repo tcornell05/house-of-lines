@@ -39,8 +39,7 @@ npm install
 npm run serve
 ```
 ## Demo
-![Demo]([images/house-of-lines-solution-demo.webm](https://github.com/tcornell05/house-of-lines/raw/master/images/house-of-lines-solution-demo.webm))
+![Demo]( images/house-of-lines-solution-demo.gif )
 
-<video src="https://github.com/tcornell05/house-of-lines/raw/master/images/house-of-lines-solution-demo.webm" width="300" />
 
 
