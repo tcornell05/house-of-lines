@@ -37,4 +37,8 @@ npm install
 ### Compiles and hot-reloads for development
 ```
 npm run serve
+
+## Demo
+![Figure 1](images/house-of-lines-solution-demo.webm)
+
 ```
